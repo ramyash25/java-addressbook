@@ -11,22 +11,31 @@ pipeline {
                 sh 'mvn test'
             }
         }
-        stage('SonarCloud Code Analysis') {
-            environment {
-                // This securely injects the secret token you saved in Step 1
-                SONAR_TOKEN = credentials('SONARCLOUD_TOKEN')
-            }
+       stage('SonarCloud Code Analysis') {
+        environment {
+        SONAR_TOKEN = credentials('SONARCLOUD_TOKEN')
+        }
         steps {
-        // Runs the official scanner container to analyze and push code details to the cloud
-        sh """
-            docker run --rm \
-                -e SONAR_HOST_URL="https://sonarcloud.io" \
-                -e SONAR_TOKEN="${SONAR_TOKEN}" \
-                -v "\$(pwd):/usr/src" \
-                sonarsource/sonar-scanner-cli \
-                -Dsonar.projectKey=ramyash25_java-addressbook \
-                -Dsonar.organization=ramyash25
+        // 1. Run the scan as you did before
+            sh """
+                docker run --rm \
+                    -e SONAR_HOST_URL="https://sonarcloud.io" \
+                    -e SONAR_TOKEN="${SONAR_TOKEN}" \
+                    -v "\$(pwd):/usr/src" \
+                    sonarsource/sonar-scanner-cli \
+                    -Dsonar.projectKey=ramyash25_java-addressbook \
+                    -Dsonar.organization=ramyash25
         """
+        
+        // 2. Wait for SonarCloud to return the Quality Gate result
+        timeout(time: 5, unit: 'MINUTES') {
+            script {
+                def qg = waitForQualityGate()
+                if (qg.status != 'OK') {
+                    error "Pipeline aborted due to Quality Gate failure: ${qg.status}"
+                }
+            }
+        }
     }
 }
 
