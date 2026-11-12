@@ -43,10 +43,17 @@ pipeline {
             }
         }
 	stage('Docker Build') {
-            steps {
-                sh 'docker build -t addressbook:${BUILD_NUMBER} .'
-            }
-        }
+    		steps {
+        	sh '''
+            	pwd
+            	ls -lh
+            	ls -lh target/addressbook.war
+            	cat Dockerfile
+            	docker build -t addressbook:${BUILD_NUMBER} .
+        	'''
+    		}
+	}	
+
     }
 }
 
