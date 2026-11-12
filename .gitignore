@@ -1,0 +1,14 @@
+# Maven build output
+target/
+
+# Backup files
+*.backup
+*.backup1
+*.bak
+
+# IDE files
+.idea/
+*.iml
+.classpath
+.project
+.settings/
