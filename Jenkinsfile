@@ -17,7 +17,8 @@ pipeline {
                     sh '''
                         mvn org.sonarsource.scanner.maven:sonar-maven-plugin:5.1.0.4751:sonar \
                         -Dsonar.projectKey=ramyash25_java-addressbook \
-                        -Dsonar.organization=ramyash25
+                        -Dsonar.organization=ramyash25 \
+			-Dsonar.projectName="Java Address Book"
                     '''
                 }
             }
