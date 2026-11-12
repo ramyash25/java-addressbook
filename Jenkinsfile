@@ -52,6 +52,11 @@ pipeline {
             	docker build -t addressbook:${BUILD_NUMBER} .
         	'''
     		}
+	}
+ 	stage('Trivy Security Scan') {
+    		steps {
+        	sh 'trivy image --severity HIGH,CRITICAL --exit-code 1 addressbook:${BUILD_NUMBER}'
+    		}
 	}	
 
     }
