@@ -1,5 +1,8 @@
 pipeline {
     agent any
+	environment {
+    		MAVEN_OPTS = '-Xms128m -Xmx512m'
+    	}
 
     stages {
         stage('Build and Test') {
